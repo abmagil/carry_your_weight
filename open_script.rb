@@ -1,4 +1,5 @@
 require 'rugged'
+require 'ruby-progressbar'
 
 IGNORE_FILES = ['.gitignore', 'Gemfile.lock', '.project', 'LICENSE']
 IGNORE_DIRS = ['bin/', 'pkg/']
@@ -6,12 +7,11 @@ IGNORE_DIRS = ['bin/', 'pkg/']
 # Path to a local git repo
 repo = Rugged::Repository.new(ARGV[0])
 
-# Get the HEAD commit from master
-master_head = repo.branches.find{|br| br.name == "master"}.target
+# Instantiate progress bar, ending at the total number of commits
+progress_bar = ProgressBar.create(total: Rugged::Walker.walk(repo, show: repo.head.target).count)
 
 # Walk every commit on master, starting at the last one
-Rugged::Walker.walk(repo, show: master_head, sort: Rugged::SORT_DATE) do |commit|
-  puts "commit: #{commit.oid}"
+Rugged::Walker.walk(repo, show: repo.head.target, sort: Rugged::SORT_DATE) do |commit|
   # Count the files
   commit.tree.walk_blobs(:postorder) do |root, entry|
     next if IGNORE_DIRS.include? root
@@ -34,6 +34,7 @@ Rugged::Walker.walk(repo, show: master_head, sort: Rugged::SORT_DATE) do |commit
     # author_to_lines will be ["julian" => 15, "aaron" => 10]
     # Persist at this point
   end
+  progress_bar.increment
 
 end
 
