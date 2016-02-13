@@ -18,25 +18,21 @@ Rugged::Walker.walk(repo, show: master_head, sort: Rugged::SORT_DATE) do |commit
     next if IGNORE_FILES.include? entry[:name]
 
     file_path = root + entry[:name]
-    puts "\tfile: #{file_path}"
 
     # having been handed a file
     blame = Rugged::Blame.new(repo, file_path, newest_commit: commit)
 
-    # {"julian" => hunk}
+    # [{"julian" => [hunk]}]
     author_hunks = blame.group_by{|hunk| hunk[:final_signature][:name]}
 
-    # Another reduce can be used here
-    # Reduce down all lines from this file for this author
     author_to_lines = {}
     author_hunks.each do |author, hunks|
-      puts "author: #{author}"
       author_to_lines[author] = hunks.reduce(0) do |memo, hunk|
-        puts "hunk: #{hunk}"
         memo += hunk[:lines_in_hunk]
       end
-    puts "author_hunks: #{author_hunks}"
     end
+    # author_to_lines will be ["julian" => 15, "aaron" => 10]
+    # Persist at this point
   end
 
 end
