@@ -3,7 +3,8 @@ require 'rugged'
 IGNORE_FILES = ['.gitignore', 'Gemfile.lock', '.project', 'LICENSE']
 IGNORE_DIRS = ['bin/', 'pkg/']
 
-repo = Rugged::Repository.new(".")
+# Path to a local git repo
+repo = Rugged::Repository.new(ARGV[0])
 
 # Get the HEAD commit from master
 master_head = repo.branches.find{|br| br.name == "master"}.target
