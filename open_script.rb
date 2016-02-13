@@ -12,9 +12,7 @@ repo = Rugged::Repository.new(ARGV[0])
 project_name = repo.workdir.split("/").last
 
 # Instantiate DB and collection connection
-client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => "carry_your_weight")
-db = client.database
-collection = db[project_name]
+collection = Mongo::Client.new([ '127.0.0.1:27017' ], :database => "carry_your_weight")[project_name]
 
 # Get the HEAD commit from master
 master_head = repo.branches.find{|br| br.name == "master"}.target
