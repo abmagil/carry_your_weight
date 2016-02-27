@@ -4,3 +4,4 @@ ruby '2.2.2'
 
 gem 'rugged'
 gem 'mongo'
+gem 'ruby-progressbar'

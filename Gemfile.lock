@@ -4,6 +4,7 @@ GEM
     bson (4.0.1)
     mongo (2.2.2)
       bson (~> 4.0)
+    ruby-progressbar (1.7.5)
     rugged (0.23.3)
 
 PLATFORMS
@@ -11,6 +12,7 @@ PLATFORMS
 
 DEPENDENCIES
   mongo
+  ruby-progressbar
   rugged
 
 BUNDLED WITH

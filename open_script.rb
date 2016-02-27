@@ -1,6 +1,6 @@
 require 'rugged'
+require 'ruby-progressbar'
 require 'mongo'
-
 
 IGNORE_FILES = ['.gitignore', 'Gemfile.lock', '.project', 'LICENSE']
 IGNORE_DIRS = ['bin/', 'pkg/']
@@ -14,11 +14,11 @@ project_name = repo.workdir.split("/").last
 # Instantiate DB and collection connection
 collection = Mongo::Client.new([ '127.0.0.1:27017' ], :database => "carry_your_weight")[project_name]
 
-# Get the HEAD commit from master
-master_head = repo.branches.find{|br| br.name == "master"}.target
+# Instantiate progress bar, ending at the total number of commits
+progress_bar = ProgressBar.create(total: Rugged::Walker.walk(repo, show: repo.head.target).count)
 
 # Walk every commit on master, starting at the last one
-Rugged::Walker.walk(repo, show: master_head, sort: Rugged::SORT_DATE) do |commit|
+Rugged::Walker.walk(repo, show: repo.head.target, sort: Rugged::SORT_DATE) do |commit|
   # Count the files
   commit.tree.walk_blobs(:postorder) do |root, entry|
     next if IGNORE_DIRS.include? root
@@ -55,6 +55,7 @@ Rugged::Walker.walk(repo, show: master_head, sort: Rugged::SORT_DATE) do |commit
       collection.insert_one(data_hash)
     end
   end
+  progress_bar.increment
 
 end
 
