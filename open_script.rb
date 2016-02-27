@@ -1,10 +1,6 @@
 require 'rugged'
-<<<<<<< HEAD
 require 'ruby-progressbar'
-=======
 require 'mongo'
-
->>>>>>> master
 
 IGNORE_FILES = ['.gitignore', 'Gemfile.lock', '.project', 'LICENSE']
 IGNORE_DIRS = ['bin/', 'pkg/']
