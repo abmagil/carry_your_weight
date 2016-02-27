@@ -41,15 +41,16 @@ def run(opts)
         ws.send "Connected to #{handshake.path}."
       end
 
+      ws.onmessage do |msg|
+        puts "msg: #{msg}"
+        ws.send "Received Message: #{msg}"
+      end
+      
       ws.onclose do
         ws.send "Closed."
         EM.stop
       end
 
-      ws.onmessage do |msg|
-        puts "msg: #{msg}"
-        ws.send "Received Message: #{msg}"
-      end
     end
   end
 end
