@@ -1,19 +1,40 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    bson (4.0.1)
-    mongo (2.2.2)
+    bson (4.0.2)
+    daemons (1.2.3)
+    em-websocket (0.5.1)
+      eventmachine (>= 0.12.9)
+      http_parser.rb (~> 0.6.0)
+    eventmachine (1.0.9.1)
+    http_parser.rb (0.6.0)
+    mongo (2.2.3)
       bson (~> 4.0)
+    rack (1.6.4)
+    rack-protection (1.5.3)
+      rack
     ruby-progressbar (1.7.5)
     rugged (0.23.3)
+    sinatra (1.4.7)
+      rack (~> 1.5)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
+    thin (1.6.4)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0, >= 1.0.4)
+      rack (~> 1.0)
+    tilt (2.0.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  em-websocket
   mongo
   ruby-progressbar
   rugged
+  sinatra
+  thin
 
 BUNDLED WITH
    1.11.2
