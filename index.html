@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <script>
+    //fake server
+    subscribers = [];
+    // subscribers.push();
+    var commitDocument = function() {
+      return {
+        "commit": "bd2cbd1455df71765e9efb55ea17dd1cc545924f",
+        "time": Date.now(),
+        "author_lines": {
+          "Liz": 4 + Math.floor((Math.random() * 10) +1 ),
+          "Magil": 5 + Math.floor((Math.random() * 10) + 1)
+        }
+      }
+    }
+    setInterval(function() {
+      subscribers.forEach(function(e) {
+        var event = new CustomEvent('getDocument', {detail: commitDocument});
+        subscribers.forEach(function(elem) {
+          elem.dispatchEvent(event)
+        })
+      })
+    }, 1000);
+  </script>
+  <script>
+  //client-side rendering
+    subscribers.push(this)
+    this.addEventListener('getDocument', function(e) {
+      console.log(e.detail.call())
+    });
+  </script>
+</body>
+</html>
