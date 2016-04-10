@@ -9,7 +9,6 @@
   <script>
     //fake server
     subscribers = [];
-    // subscribers.push();
     var commitDocument = function() {
       return {
         "commit": "bd2cbd1455df71765e9efb55ea17dd1cc545924f",
@@ -20,7 +19,7 @@
         }
       }
     }
-    setTimeout(function() {
+    setInterval(function() {
       subscribers.forEach(function(e) {
         var event = new CustomEvent('getDocument', {detail: commitDocument});
         subscribers.forEach(function(elem) {
@@ -31,7 +30,21 @@
   </script>
   <script>
   //client-side rendering
-    subscribers.push(this)
+    subscribers.push(this);
+    var width = 360;
+    var height = 360;
+    var radius = Math.min(width, height) / 2;
+    var color = d3.scale.category20c()
+    var svg = d3.select('#chart')
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .append('g')
+      .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
+    var arc = d3.svg.arc().outerRadius(radius);
+    var pie = d3.layout.pie()
+      .value(function(d) {return d.lines;})
+      .sort(null);
     this.addEventListener('getDocument', function(e) {
       commitDetail = (e.detail.call().author_lines);
       var dataset = [];
@@ -39,28 +52,14 @@
         dataset.push({person: person, lines: commitDetail[person]});
       }
       console.log(dataset);
-      var width = 360;
-      var height = 360;
-      var radius = Math.min(width, height) / 2;
-      var color = d3.scale.category20c()
-      var svg = d3.select('#chart')
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .append('g')
-        .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
-      var arc = d3.svg.arc().outerRadius(radius);
-      var pie = d3.layout.pie()
-        .value(function(d) {return d.lines;})
-        .sort(null);
-      var path = svg.selectAll('path')
-        .data(pie(dataset))
+      var path = svg.datum(dataset).selectAll('path')
+        .data(pie)
         .enter()
-        .append('path')
-        .attr('d', arc)
-        .attr('fill', function(d, i) {
-          console.log(d.data);
-          return color(d.data.person);
+          .append('path')
+          .attr('d', arc)
+          .attr('fill', function(d, i) {
+            // console.log(d.data);
+            return color(d.data.person);
         });
     });
   </script>
