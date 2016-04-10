@@ -42,7 +42,7 @@
       var width = 360;
       var height = 360;
       var radius = Math.min(width, height) / 2;
-      var color = d3.scale.ordinal().range(['#F75930', '#00AA75']);
+      var color = d3.scale.category20c()
       var svg = d3.select('#chart')
         .append('svg')
         .attr('width', width)
@@ -59,7 +59,8 @@
         .append('path')
         .attr('d', arc)
         .attr('fill', function(d, i) {
-          return color(d.data.name);
+          console.log(d.data);
+          return color(d.data.person);
         });
     });
   </script>
