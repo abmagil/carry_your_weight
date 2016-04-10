@@ -54,13 +54,14 @@
       console.log(dataset);
       var path = svg.datum(dataset).selectAll('path')
         .data(pie)
+        .attr('d', arc)
         .enter()
           .append('path')
           .attr('d', arc)
           .attr('fill', function(d, i) {
             // console.log(d.data);
             return color(d.data.person);
-        });
+          });
     });
   </script>
 </body>
