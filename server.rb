@@ -43,7 +43,11 @@ def run(opts)
 
       ws.onmessage do |msg|
         puts "msg: #{msg}"
-        ws.send "Received Message: #{msg}"
+        q = EM::Queue.new
+        q.push('one', 'two', 'three')
+        3.times do
+          q.pop { |wrd| ws.send(wrd) }
+        end
       end
       
       ws.onclose do
