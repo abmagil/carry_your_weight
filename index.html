@@ -15,7 +15,8 @@
         "time": Date.now(),
         "author_lines": {
           "Liz": 4 + Math.floor((Math.random() * 10) +1 ),
-          "Magil": 5 + Math.floor((Math.random() * 10) + 1)
+          "Magil": 5 + Math.floor((Math.random() * 10) + 1),
+          "Person_3": 4 + Math.floor((Math.random() * 10) +1)
         }
       }
     }
@@ -45,13 +46,15 @@
     var pie = d3.layout.pie()
       .value(function(d) {return d.lines;})
       .sort(null);
+    var legend = d3.select("#chart").append("svg")
+      .attr("class", "legend")
+      .selectAll("g");
     this.addEventListener('getDocument', function(e) {
       commitDetail = (e.detail.call().author_lines);
       var dataset = [];
       for (var person in commitDetail) {
         dataset.push({person: person, lines: commitDetail[person]});
       }
-      console.log(dataset);
       var path = svg.datum(dataset).selectAll('path')
         .data(pie)
         .attr('d', arc)
@@ -62,6 +65,29 @@
             // console.log(d.data);
             return color(d.data.person);
           });
+
+    legend
+      .data(dataset)
+      .enter().append("g")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend
+      .data(dataset)
+      .enter()
+        .append("rect")
+        .attr("width", 18)
+        .attr("height", 18)
+        .attr("y", function(d, i) {return i*20})
+        .style("fill", function(d, i) { return color(d.person); });
+
+    legend
+      .data(dataset)
+      .enter()
+        .append("text")
+        .attr("x", 24)
+        .attr("y", function(d, i) {return 9 + i*20})
+        .attr("dy", ".35em")
+        .text(function(d) { return d.person; });
     });
   </script>
 </body>
