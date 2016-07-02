@@ -90,5 +90,68 @@
         .text(function(d) { return d.person; });
     });
   </script>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+    var socket, host;
+    host = "ws://localhost:3001";
+
+    function connect() {
+      try {
+        socket = new WebSocket(host);
+
+        addMessage("Socket State: " + socket.readyState);
+
+        socket.onopen = function() {
+          addMessage("Socket Status: " + socket.readyState + " (open)");
+        }
+
+        socket.onclose = function() {
+          addMessage("Socket Status: " + socket.readyState + " (closed)");
+        }
+
+        socket.onmessage = function(msg) {
+          addMessage("Received: " + msg.data);
+        }
+      } catch(exception) {
+        addMessage("Error: " + exception);
+      }
+    }
+
+    function send() {
+      var text = $("#message").val();
+      if (text == '') {
+        addMessage("Please Enter a Message");
+        return;
+      }
+
+      try {
+        socket.send(text);
+        addMessage("Sent: " + text)
+      } catch(exception) {
+        addMessage("Failed To Send")
+      }
+
+      $("#message").val('');
+    }
+
+    function addMessage(msg) {
+      console.log("" + msg + "");
+    }
+
+    $("#disconnect").click(function() {
+      socket.close()
+    });
+
+    $('#send').click(function(event) {
+      send();
+    });
+
+
+    $(function() {
+      connect();
+    });
+  </script>
+
 </body>
 </html>

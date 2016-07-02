@@ -1,7 +1,5 @@
 require 'eventmachine'
-require 'em-websocket'
-require 'sinatra/base'
-require 'thin'
+
 
 
 # This example shows you how to embed Sinatra into your EventMachine
@@ -49,7 +47,7 @@ def run(opts)
           q.pop { |wrd| ws.send(wrd) }
         end
       end
-      
+
       ws.onclose do
         ws.send "Closed."
         EM.stop
