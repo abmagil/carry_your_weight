@@ -11,6 +11,8 @@ App.cable.subscriptions.create "HomeChannel",
 
   # BizLogic
   received: (data) ->
+    $('#raw').text(JSON.stringify(data, null, 2))
+
     dataset = $.map(data.author_lines, (lines, person) ->
       {person, lines})
 
