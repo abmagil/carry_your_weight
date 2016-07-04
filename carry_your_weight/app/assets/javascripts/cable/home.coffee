@@ -11,26 +11,21 @@ App.cable.subscriptions.create "HomeChannel",
 
   # BizLogic
   received: (data) ->
-    commitDetail = (data.author_lines);
-    dataset = [];
-    for person of commitDetail
-      dataset.push({person: person, lines: commitDetail[person]});
+    dataset = $.map(data.author_lines, (lines, person) ->
+      {person, lines})
+
     path = svg.datum(dataset).selectAll('path')
       .data(pie)
       .attr('d', arc)
       .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', (d, i) ->
-          color(d.data.person);
-        );
+        .attr('fill', (d, i) -> color(d.data.person))
 
     legend
       .data(dataset)
       .enter().append("g")
-      .attr("transform", (d, i) ->
-        "translate(0," + i * 20 + ")"
-      );
+      .attr("transform", (d, i) -> "translate(0, #{i * 20})")
 
     legend
       .data(dataset)
@@ -38,10 +33,8 @@ App.cable.subscriptions.create "HomeChannel",
         .append("rect")
         .attr("width", 18)
         .attr("height", 18)
-        .attr("y", (d, i) ->
-          i*20
-        )
-        .style("fill", (d, i) -> color(d.person));
+        .attr("y", (d, i) -> i*20)
+        .style("fill", (d, i) -> color(d.person))
 
     legend
       .data(dataset)
@@ -50,4 +43,4 @@ App.cable.subscriptions.create "HomeChannel",
         .attr("x", 24)
         .attr("y", (d, i) -> 9 + i*20 )
         .attr("dy", ".35em")
-        .text((d) -> d.person);
+        .text((d) -> d.person)
