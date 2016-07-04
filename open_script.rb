@@ -18,7 +18,7 @@ collection = Mongo::Client.new([ '127.0.0.1:27017' ], :database => "carry_your_w
 progress_bar = ProgressBar.create(total: Rugged::Walker.walk(repo, show: repo.head.target).count)
 
 # Walk every commit on master, starting at the last one
-Rugged::Walker.walk(repo, show: repo.head.target, sort: Rugged::SORT_DATE) do |commit|
+Rugged::Walker.walk(repo, show: repo.head.target, sort: Rugged::SORT_DATE | Rugged::SORT_REVERSE, simplify: true) do |commit|
   # Count the files
   commit.tree.walk_blobs(:postorder) do |root, entry|
     next if IGNORE_DIRS.include? root
