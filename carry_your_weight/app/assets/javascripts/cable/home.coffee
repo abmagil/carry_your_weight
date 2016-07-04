@@ -24,13 +24,8 @@ App.cable.subscriptions.create "HomeChannel",
         .attr('d', arc)
         .attr('fill', (d, i) -> color(d.data.person))
 
-    legend
-      .data(dataset)
-      .enter().append("g")
-      .attr("transform", (d, i) -> "translate(0, #{i * 20})")
-
-    legend
-      .data(dataset)
+    legend.selectAll("rect")
+      .data(dataset, (d) -> d.person)
       .enter()
         .append("rect")
         .attr("width", 18)
@@ -38,8 +33,9 @@ App.cable.subscriptions.create "HomeChannel",
         .attr("y", (d, i) -> i*20)
         .style("fill", (d, i) -> color(d.person))
 
-    legend
-      .data(dataset)
+
+    legend.selectAll("text")
+      .data(dataset, (d) -> d.person)
       .enter()
         .append("text")
         .attr("x", 24)
