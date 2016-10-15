@@ -13,17 +13,28 @@ App.cable.subscriptions.create "HomeChannel",
   received: (data) ->
     $('#raw').text(JSON.stringify(data, null, 2))
 
+    arcTween = (a) ->
+      i = d3.interpolate(this._current, a)
+      this._current = i(0)
+      (t) ->
+        arc(i(t))
+
     dataset = $.map(data.author_lines, (lines, person) ->
       {person, lines})
 
     path = svg.datum(dataset).selectAll('path')
       .data(pie)
     path
+      .transition()
+      .duration(250)
+      .attrTween("d", arcTween)
+    path
       .attr('d', arc)
       .enter()
         .append('path')
         .attr('d', arc)
         .attr('fill', (d, i) -> color(d.data.person))
+        .each((d) -> this._current = d)
 
     path.exit().remove()
 
