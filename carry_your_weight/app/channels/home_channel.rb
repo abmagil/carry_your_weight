@@ -21,7 +21,7 @@ class HomeChannel < ApplicationCable::Channel
     def commit_document
       random_string = (0...8).map { (65 + rand(26)).chr }.join
 
-      committers = COMMITTERS.take(rand(COMMITTERS.length) + 1)
+      committers = COMMITTERS.take(rand(COMMITTERS.length) + 1).shuffle
 
       authors_hash = committers.inject({}) do |memo, committer|
         memo[committer] = rand(26)
