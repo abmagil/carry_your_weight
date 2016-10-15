@@ -1,6 +1,8 @@
 class HomeChannel < ApplicationCable::Channel
   periodically :send_commit_hash, every: 5.seconds
 
+  COMMITTERS = ["Aaron", "Beth", "Clarence", "Denise", "Ephraim", "Florence"]
+
   def subscribed
     puts "I am subscribed"
   end
@@ -17,19 +19,20 @@ class HomeChannel < ApplicationCable::Channel
   private
 
     def commit_document
-      {
-        commit: "bd2cbd1455df71765e9efb55ea17dd1cc545924f",
-        time: Date.current,
-        author_lines: {
-          "Liz": rand_lines(4),
-          "Magil": rand_lines(5),
-          "Person_3": rand_lines(3)
-        }
-      }
-    end
+      random_string = (0...8).map { (65 + rand(26)).chr }.join
 
-    def rand_lines(base)
-      rand(10) + 1 + base
+      committers = COMMITTERS.take(rand(COMMITTERS.length))
+
+      authors_hash = committers.inject({}) do |memo, committer|
+        memo[committer] = rand(26)
+        memo
+      end
+
+      {
+        commit: Digest::SHA1.hexdigest(random_string),
+        time: Date.current,
+        author_lines: authors_hash
+      }
     end
   # end private block
 end
