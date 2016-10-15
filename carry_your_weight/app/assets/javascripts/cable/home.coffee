@@ -22,6 +22,10 @@ App.cable.subscriptions.create "HomeChannel",
     dataset = $.map(data.author_lines, (lines, person) ->
       {person, lines})
 
+    y.domain(dataset.map((d) -> d.person))
+
+    y.range(dataset.length)
+
     path = svg.datum(dataset).selectAll('path')
       .data(pie)
     path
@@ -33,7 +37,9 @@ App.cable.subscriptions.create "HomeChannel",
       .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', (d, i) -> color(d.data.person))
+        .attr('fill', (d, i) ->
+          # console.log ("pie person: " + d.data.person + " color: " + color(d.data.person))
+          color(d.data.person))
         .each((d) -> this._current = d)
 
     path.exit().remove()
@@ -45,8 +51,10 @@ App.cable.subscriptions.create "HomeChannel",
         .append("rect")
         .attr("width", 18)
         .attr("height", 18)
-        .attr("y", (d, i) -> i*20)
-        .style("fill", (d, i) -> color(d.person))
+        .attr("y", (d) -> y(d.person) * 20)
+        .style("fill", (d, i) ->
+          # console.log ("legend person: " + d.person + " color: " + color(d.person))
+          color(d.person))
     legendColor.exit().remove()
 
     legendText = legend.selectAll("text")
@@ -55,7 +63,7 @@ App.cable.subscriptions.create "HomeChannel",
       .enter()
         .append("text")
         .attr("x", 24)
-        .attr("y", (d, i) -> 9 + i*20 )
+        .attr("y", (d) -> y(d.person) * 20)
         .attr("dy", ".35em")
         .text((d) -> d.person)
     legendText.exit().remove()
