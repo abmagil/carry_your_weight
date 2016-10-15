@@ -18,26 +18,33 @@ App.cable.subscriptions.create "HomeChannel",
 
     path = svg.datum(dataset).selectAll('path')
       .data(pie)
+    path
       .attr('d', arc)
       .enter()
         .append('path')
         .attr('d', arc)
         .attr('fill', (d, i) -> color(d.data.person))
 
-    legend.selectAll("rect")
+    path.exit().remove()
+
+    legendColor = legend.selectAll("rect")
       .data(dataset, (d) -> d.person)
+    legendColor
       .enter()
         .append("rect")
         .attr("width", 18)
         .attr("height", 18)
         .attr("y", (d, i) -> i*20)
         .style("fill", (d, i) -> color(d.person))
+    legendColor.exit().remove()
 
-    legend.selectAll("text")
+    legendText = legend.selectAll("text")
       .data(dataset, (d) -> d.person)
+    legendText
       .enter()
         .append("text")
         .attr("x", 24)
         .attr("y", (d, i) -> 9 + i*20 )
         .attr("dy", ".35em")
         .text((d) -> d.person)
+    legendText.exit().remove()
