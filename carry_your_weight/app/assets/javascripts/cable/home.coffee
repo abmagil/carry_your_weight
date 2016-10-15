@@ -33,7 +33,6 @@ App.cable.subscriptions.create "HomeChannel",
         .attr("y", (d, i) -> i*20)
         .style("fill", (d, i) -> color(d.person))
 
-
     legend.selectAll("text")
       .data(dataset, (d) -> d.person)
       .enter()
