@@ -1,19 +1,18 @@
 class HomeChannel < ApplicationCable::Channel
-  periodically :send_commit_hash, every: 5.seconds
-
   COMMITTERS = ["Aaron", "Beth", "Clarence", "Denise", "Ephraim", "Florence"]
 
   def subscribed
     puts "I am subscribed"
+    transmit commit_document
+  end
+
+  def next
+    transmit commit_document
   end
 
   def unsubscribed
     stop_all_streams
     puts "I am now unsubscribed!"
-  end
-
-  def send_commit_hash
-    transmit commit_document
   end
 
   private

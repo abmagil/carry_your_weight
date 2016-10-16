@@ -1,4 +1,4 @@
-App.cable.subscriptions.create "HomeChannel",
+homeChannel = App.cable.subscriptions.create "HomeChannel",
   # ActionCable Callbacks
   connected: ->
     console.log("Connected to Home Channel")
@@ -83,3 +83,10 @@ App.cable.subscriptions.create "HomeChannel",
       .attr("y", (d) -> y(d.person))
     # Exit
     legendText.exit().remove()
+
+  next: () ->
+    @perform 'next'
+
+$(document).ready () ->
+  $("#next").click ->
+    homeChannel.perform("next")
